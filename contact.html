@@ -282,6 +282,7 @@
         if (a.value === '' || b.value === '' || c.value === '') {
           event.preventDefault()
           alert('Please Fill Name, Message and Email')
+          return
         }
         var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
         var bool = c.value.match(validRegex);

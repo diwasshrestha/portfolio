@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Dynamics NAV to Business Central Upgrade Guide (Step by Step) | Diwas Shrestha</title>
+  <meta name="description" content="Step-by-step guide to upgrading Dynamics NAV to Business Central: upgrade paths, C/AL to AL conversion, upgrade codeunits, report migration and cut-over.">
+  <meta name="author" content="Diwas Shrestha">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://www.diwasstha.com.np/blog/nav-to-business-central-upgrade-guide/">
+  <meta name="theme-color" content="#05070f">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Diwas Shrestha">
+  <meta property="og:title" content="Dynamics NAV to Business Central Upgrade Guide (Step by Step) | Diwas Shrestha">
+  <meta property="og:description" content="Step-by-step guide to upgrading Dynamics NAV to Business Central: upgrade paths, C/AL to AL conversion, upgrade codeunits, report migration and cut-over.">
+  <meta property="og:url" content="https://www.diwasstha.com.np/blog/nav-to-business-central-upgrade-guide/">
+  <meta property="og:image" content="https://www.diwasstha.com.np/assets/img/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+  <meta property="article:published_time" content="2026-10-07T09:00:00+05:45">
+  <meta property="article:modified_time" content="2026-10-07T09:00:00+05:45">
+  <meta property="article:author" content="https://www.diwasstha.com.np/">
+  <meta property="article:section" content="Dynamics 365 Business Central">
+  <meta property="article:tag" content="NAV to Business Central upgrade">
+  <meta property="article:tag" content="Dynamics NAV upgrade">
+  <meta property="article:tag" content="C/AL to AL">
+  <meta property="article:tag" content="Business Central migration">
+  <meta property="article:tag" content="upgrade codeunit">
+  <meta property="article:tag" content="NAV 2009 R2">
+  <meta property="article:tag" content="NAV 2015">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dynamics NAV to Business Central Upgrade Guide (Step by Step) | Diwas Shrestha">
+  <meta name="twitter:description" content="Step-by-step guide to upgrading Dynamics NAV to Business Central: upgrade paths, C/AL to AL conversion, upgrade codeunits, report migration and cut-over.">
+  <meta name="twitter:image" content="https://www.diwasstha.com.np/assets/img/og-image.jpg">
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Diwas Shrestha — Blog" href="/feed.xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://www.diwasstha.com.np/blog/nav-to-business-central-upgrade-guide/#article",
+      "headline": "Upgrading Dynamics NAV to Business Central: A Technical Roadmap",
+      "description": "Step-by-step guide to upgrading Dynamics NAV to Business Central: upgrade paths, C/AL to AL conversion, upgrade codeunits, report migration and cut-over.",
+      "url": "https://www.diwasstha.com.np/blog/nav-to-business-central-upgrade-guide/",
+      "mainEntityOfPage": "https://www.diwasstha.com.np/blog/nav-to-business-central-upgrade-guide/",
+      "image": "https://www.diwasstha.com.np/assets/img/og-image.jpg",
+      "datePublished": "2026-10-07",
+      "dateModified": "2026-10-07",
+      "inLanguage": "en",
+      "wordCount": 1160,
+      "keywords": "NAV to Business Central upgrade, Dynamics NAV upgrade, C/AL to AL, Business Central migration, upgrade codeunit, NAV 2009 R2, NAV 2015",
+      "articleSection": "Dynamics 365 Business Central",
+      "author": {
+        "@type": "Person",
+        "@id": "https://www.diwasstha.com.np/#person",
+        "name": "Diwas Shrestha",
+        "url": "https://www.diwasstha.com.np/",
+        "jobTitle": ".NET Developer & Business Central Technical Consultant",
+        "sameAs": [
+          "https://www.linkedin.com/in/diwas-cresta/",
+          "https://github.com/diwasshrestha"
+        ]
+      },
+      "publisher": {
+        "@id": "https://www.diwasstha.com.np/#person"
+      },
+      "isPartOf": {
+        "@type": "Blog",
+        "@id": "https://www.diwasstha.com.np/blog/#blog",
+        "name": "Diwas Shrestha — Blog",
+        "url": "https://www.diwasstha.com.np/blog/"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.diwasstha.com.np/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://www.diwasstha.com.np/blog/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Upgrading Dynamics NAV to Business Central: A Technical Roadmap",
+          "item": "https://www.diwasstha.com.np/blog/nav-to-business-central-upgrade-guide/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"></div>
+  <div class="bg-fx" aria-hidden="true"><div class="grid"></div><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="noise"></div></div>
+
+  <header class="site-header">
+    <div class="container">
+      <nav class="nav" aria-label="Primary">
+        <a href="/" class="logo" aria-label="Diwas Shrestha — home"><span class="br">&lt;</span>diwas<span class="sl">/</span><span class="br">&gt;</span></a>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="/#about">About</a></li>
+          <li><a href="/#services">Services</a></li>
+          <li><a href="/#stack">Stack</a></li>
+          <li><a href="/#work">Work</a></li>
+          <li><a href="/blog/" class="active" aria-current="page">Blog</a></li>
+          <li><a href="/#contact">Contact</a></li>
+        </ul>
+        <div class="nav-actions">
+          <button class="kbd-btn" type="button" data-palette-open aria-label="Open command palette"><span class="lbl">Search</span> <kbd>Ctrl K</kbd></button>
+          <a href="/#contact" class="btn btn-primary btn-sm">Hire me</a>
+          <button class="menu-btn" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <article itemscope itemtype="https://schema.org/BlogPosting">
+      <header class="page-hero">
+        <div class="container">
+          <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">home</a></li><li><a href="/blog/">blog</a></li><li aria-current="page">nav-to-business-central-upgrade-guide</li></ol></nav>
+          <h1 itemprop="headline">Upgrading Dynamics NAV to Business Central: A Technical Roadmap</h1>
+          <p class="lead" itemprop="description">Upgrade paths, C/AL to AL conversion, upgrade codeunits, report migration and the cut-over checklist I use on real NAV to Business Central projects.</p>
+          <div class="article-meta">
+            <span class="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><img src="/assets/img/diwas-shrestha.webp" width="32" height="32" alt=""><span itemprop="name">Diwas Shrestha</span></span>
+            <time datetime="2026-10-07" itemprop="datePublished">Oct 7, 2026</time>
+            <span>9 min read</span>
+            <span>#upgrade</span>
+          </div>
+        </div>
+      </header>
+      <div class="container article-layout">
+        <div class="prose" itemprop="articleBody">
+<p>Plenty of businesses still run on <strong>Microsoft Dynamics NAV</strong>. It works, until it doesn't: mainstream support has ended for every NAV version, finding C/SIDE developers is getting harder, and modern integrations expect REST APIs and the cloud. <strong>Dynamics 365 Business Central</strong> is the natural next step, but a NAV upgrade is a software project and should be planned like one.</p>
+<p>This is the roadmap I follow when upgrading NAV solutions to Business Central, based on projects that went from <strong>NAV 2009 R2</strong> and <strong>NAV 2015</strong> to modern Business Central versions.</p>
+
+<h2 id="why-upgrade">Why move from NAV to Business Central?</h2>
+<ul>
+  <li><strong>Supported, evergreen platform.</strong> Business Central gets two major releases a year plus monthly updates, so you stop paying for one large "re-upgrade" every few years.</li>
+  <li><strong>Extensions instead of code modifications.</strong> Customisations live in AL extensions that sit on top of the base application rather than changing it, which makes future updates far cheaper.</li>
+  <li><strong>Cloud and APIs.</strong> Standard REST/OData APIs, Power Platform connectors and Microsoft Entra ID authentication make integration a configuration task rather than a custom project.</li>
+  <li><strong>A modern user experience</strong> in the browser, on tablets and phones, with Microsoft 365 integration built in.</li>
+</ul>
+
+<h2 id="upgrade-paths">Know your upgrade path</h2>
+<p>The first question is always <em>which version are you on?</em> NAV was rebuilt several times, and the route to Business Central depends on where you start. Broadly:</p>
+<table>
+  <thead><tr><th>Starting point</th><th>Typical route</th></tr></thead>
+  <tbody>
+    <tr><td>NAV 2009 R2 and older (Classic client)</td><td>An extra hop to the three-tier, RoleTailored architecture first, or a fresh Business Central implementation with data migration. This is often the cheaper option.</td></tr>
+    <tr><td>NAV 2013 to NAV 2018</td><td>Technical upgrade to Business Central 14, the last C/AL-based release, then convert customisations to AL and upgrade to a current AL-only version.</td></tr>
+    <tr><td>Business Central 14 (C/AL)</td><td>Convert to AL extensions, then upgrade to the latest on-premises version or use cloud migration to Business Central online.</td></tr>
+    <tr><td>Business Central 15+ on-premises</td><td>AL-to-AL upgrade, or cloud migration straight to Business Central online.</td></tr>
+  </tbody>
+</table>
+<div class="callout"><strong>Tip:</strong> Microsoft publishes the supported upgrade paths for each source and target version, and they change over time. Check the current documentation for your exact versions before committing to a plan.</div>
+
+<h2 id="assess">Step 1: Assess and inventory</h2>
+<p>A good upgrade starts with a clear picture of what you have. Before writing any code, build an inventory of:</p>
+<ul>
+  <li><strong>Modified and custom objects.</strong> Compare your database against a clean standard database of the same version and localisation to find the real delta.</li>
+  <li><strong>ISV add-ons.</strong> Check whether each vendor offers a Business Central version. Many do, and some are now covered by standard features.</li>
+  <li><strong>Integrations.</strong> Web services, file exchanges, direct SQL access and .NET interop. Direct SQL and client-side .NET won't work in the cloud, so plan replacements.</li>
+  <li><strong>Reports and documents</strong> that users depend on, such as invoices, picking lists and statutory reports.</li>
+  <li><strong>Data volume and history.</strong> Decide how much history to bring across and what to archive.</li>
+</ul>
+<p>Expect to <strong>drop a good share of old customisations</strong>. Features added to NAV years ago are often standard in Business Central now, or simply no longer used. Every customisation you retire is code you never have to maintain again.</p>
+
+<h2 id="convert">Step 2: Convert C/AL to AL extensions</h2>
+<p>Business Central 15 and later run only AL. For solutions that reach Business Central 14, Microsoft provides tooling to move C/AL code across:</p>
+<ol>
+  <li>Export the objects from the C/SIDE development environment in the new syntax (<code>finsql.exe</code> with the <code>ExportToNewSyntax</code> command).</li>
+  <li>Convert the exported text files to <code>.al</code> files with the <strong>Txt2Al</strong> converter.</li>
+  <li>Refactor the result into proper extensions: table extensions, page extensions and event subscribers instead of changes to standard objects.</li>
+</ol>
+<pre><code class="language-powershell"># Convert C/AL exported in the new syntax into AL files
+txt2al --source="C:\Upgrade\CAL" --target="C:\Upgrade\AL" --rename --extensionStartId=50100</code></pre>
+<p>The converter gives you a starting point, not a finished product. The real work is <strong>re-designing modifications as events</strong>. If the standard application has no event where you need one, look for a nearby event or an alternative design first. In the cloud you can't modify the base application.</p>
+
+<h2 id="data">Step 3: Upgrade data with upgrade codeunits</h2>
+<p>When table structures change, for example a custom field moving to a new table extension or an Option becoming an Enum, the data has to follow. In AL that's the job of <strong>upgrade codeunits</strong>. Combine them with <strong>upgrade tags</strong> so each step runs exactly once:</p>
+<pre><code class="language-al">codeunit 50150 "DS Upgrade Loyalty"
+{
+    Subtype = Upgrade;
+
+    trigger OnUpgradePerCompany()
+    var
+        UpgradeTag: Codeunit "Upgrade Tag";
+    begin
+        if UpgradeTag.HasUpgradeTag(LoyaltyTierUpgradeTag()) then
+            exit;
+
+        MigrateLoyaltyTier();
+        UpgradeTag.SetUpgradeTag(LoyaltyTierUpgradeTag());
+    end;
+
+    local procedure MigrateLoyaltyTier()
+    var
+        Customer: Record Customer;
+    begin
+        Customer.SetFilter("DS Loyalty Points", '>=%1', 1000);
+        Customer.ModifyAll("DS Loyalty Tier", Enum::"DS Loyalty Tier"::Gold);
+    end;
+
+    local procedure LoyaltyTierUpgradeTag(): Code[250]
+    begin
+        exit('DS-LOYALTY-TIER-20261007');
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Upgrade Tag", 'OnGetPerCompanyUpgradeTags', '', false, false)]
+    local procedure RegisterPerCompanyTags(var PerCompanyUpgradeTags: List of [Code[250]])
+    begin
+        // New companies start clean, so the upgrade step is marked as done
+        PerCompanyUpgradeTags.Add(LoyaltyTierUpgradeTag());
+    end;
+}</code></pre>
+<p>Rehearse the data upgrade on a <strong>copy of production</strong> and time it. The duration of the data upgrade decides how long your go-live weekend has to be.</p>
+
+<h2 id="reports">Step 4: Migrate the reports</h2>
+<p>Reports are where users notice an upgrade first. Classic NAV 2009 reports (the Classic client "sections" designer) don't carry over at all. They have to be rebuilt as RDLC or Word layouts on report objects. For newer versions, existing RDLC layouts often convert but still need testing.</p>
+<ul>
+  <li>Prefer <strong>report extensions</strong> and <strong>custom layouts</strong> over copying standard reports, so you keep receiving Microsoft's fixes.</li>
+  <li>Use <strong>Word layouts</strong> for documents that business users want to tweak themselves.</li>
+  <li>Compare old and new output side by side with real data, especially totals, VAT and currency formatting.</li>
+</ul>
+
+<h2 id="test">Step 5: Test in sandboxes</h2>
+<p>Use Docker containers with <strong>BcContainerHelper</strong> (or Business Central online sandboxes) to build disposable test environments. Automate the repetitive parts with AL test codeunits, then run <strong>user acceptance testing</strong> with key users on realistic data: posting, period-end, reports and every integration.</p>
+
+<h2 id="cutover">Step 6: Plan the cut-over</h2>
+<ul>
+  <li>Freeze master data changes and agree on the last transaction date in NAV.</li>
+  <li>Take a full backup and keep the old system read-only for reference.</li>
+  <li>Run the data upgrade using the timings from your rehearsal.</li>
+  <li>Reconcile: G/L balances, open customer and vendor entries, inventory value.</li>
+  <li>Smoke-test the integrations, then open the system to users.</li>
+  <li>Plan for <strong>hyper-care</strong>, with a developer on standby for the first weeks.</li>
+</ul>
+
+<h2 id="pitfalls">Common pitfalls</h2>
+<ul>
+  <li><strong>Lifting and shifting every customisation</strong> instead of questioning whether it is still needed.</li>
+  <li><strong>Underestimating reports</strong>, especially when coming from NAV 2009 R2.</li>
+  <li><strong>Forgetting integrations</strong> that relied on direct SQL access or client-side .NET assemblies.</li>
+  <li><strong>No rehearsal</strong>, which leads to a go-live weekend that runs over.</li>
+</ul>
+
+<h2 id="conclusion">Wrapping up</h2>
+<p>A NAV to Business Central upgrade is a chance to clean house: fewer customisations, cleaner code and a platform that stays current. With a clear inventory, upgrade-safe extensions, rehearsed data upgrades and a solid cut-over plan, it can be a predictable project instead of a risky one.</p>
+<p>Planning an upgrade from Dynamics NAV? <a href="/#contact">Get in touch</a>. I'm happy to look at your current version and help you pick the right path.</p>
+
+          <div class="author-box">
+            <img src="/assets/img/diwas-shrestha.webp" width="76" height="76" alt="Diwas Shrestha" loading="lazy">
+            <div><b>Diwas Shrestha</b><p>.NET developer and Dynamics 365 Business Central technical consultant in Kathmandu, Nepal. I build AL extensions, upgrade NAV systems and integrate ERP with .NET applications. <a href="/#contact">Work with me →</a></p></div>
+          </div>
+        </div>
+        <aside class="toc" aria-label="Table of contents">
+          <h2>On this page</h2>
+          <ol><li><a href="#why-upgrade">Why move from NAV to Business Central?</a></li><li><a href="#upgrade-paths">Know your upgrade path</a></li><li><a href="#assess">Assess and inventory</a></li><li><a href="#convert">Convert C/AL to AL extensions</a></li><li><a href="#data">Upgrade data with upgrade codeunits</a></li><li><a href="#reports">Migrate the reports</a></li><li><a href="#test">Test in sandboxes</a></li><li><a href="#cutover">Plan the cut-over</a></li><li><a href="#pitfalls">Common pitfalls</a></li><li><a href="#conclusion">Wrapping up</a></li></ol>
+        </aside>
+      </div>
+    </article>
+
+    <section class="section" style="padding-top:40px" aria-labelledby="related-title">
+      <div class="container">
+        <div class="section-head"><span class="eyebrow">// keep reading</span><h2 id="related-title">Related <span class="grad-text">articles</span></h2></div>
+        <div class="posts">
+          <article class="card post-card reveal">
+            <div class="meta"><span class="cat">#dotnet</span><time datetime="2026-10-07">Oct 7, 2026</time><span>· 8 min</span></div>
+            <h3><a href="/blog/business-central-api-dotnet-integration/">How to Call the Business Central API from .NET with OAuth 2.0</a></h3>
+            <p>Register an Entra ID app, get a token with MSAL and build a typed, resilient HttpClient in ASP.NET Core that reads and writes Business Central data.</p>
+            <span class="more">Read article <span class="ar">→</span></span>
+          </article>
+          <article class="card post-card reveal" style="--d:0.08s">
+            <div class="meta"><span class="cat">#al</span><time datetime="2026-10-07">Oct 7, 2026</time><span>· 7 min</span></div>
+            <h3><a href="/blog/al-extension-development-best-practices/">AL Extension Development Best Practices for Business Central</a></h3>
+            <p>Events over modifications, naming and affixes, performance with SetLoadFields, analyzers, telemetry, automated tests and CI/CD for upgrade-safe extensions.</p>
+            <span class="more">Read article <span class="ar">→</span></span>
+          </article>
+          <article class="card post-card reveal" style="--d:.16s">
+            <div class="meta"><span class="cat">#hire</span></div>
+            <h3><a href="/#contact">Need a Business Central or .NET developer?</a></h3>
+            <p>Upgrades, AL extensions and integrations, delivered remotely from Kathmandu for clients worldwide.</p>
+            <span class="more">Start a project <span class="ar">→</span></span>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="/" class="logo"><span class="br">&lt;</span>diwas<span class="sl">/</span><span class="br">&gt;</span></a>
+          <p>Diwas Shrestha — .NET developer and Microsoft Dynamics 365 Business Central technical consultant in Kathmandu, Nepal.</p>
+          <div class="socials">
+            <a href="https://www.linkedin.com/in/diwas-cresta/" target="_blank" rel="noopener me" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a>
+            <a href="https://github.com/diwasshrestha" target="_blank" rel="noopener me" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.07 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .32.21.69.82.57A12 12 0 0 0 12 .3"/></svg></a>
+            <a href="mailto:diwas668@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></a>
+          </div>
+        </div>
+        <div>
+          <h3>Navigate</h3>
+          <ul><li><a href="/#about">About</a></li><li><a href="/#services">Services</a></li><li><a href="/#work">Case files</a></li><li><a href="/#contact">Contact</a></li></ul>
+        </div>
+        <div>
+          <h3>Services</h3>
+          <ul><li><a href="/#services">Business Central development</a></li><li><a href="/#services">NAV → BC upgrades</a></li><li><a href="/#services">.NET development</a></li><li><a href="/#services">ERP integrations</a></li></ul>
+        </div>
+        <div>
+          <h3>Blog</h3>
+          <ul><li><a href="/blog/nav-to-business-central-upgrade-guide/">NAV → BC upgrade guide</a></li><li><a href="/blog/business-central-api-dotnet-integration/">BC API from .NET</a></li><li><a href="/blog/al-extension-development-best-practices/">AL best practices</a></li><li><a href="/blog/">All articles</a></li></ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span data-year>2026</span> Diwas Shrestha · diwasstha.com.np</span>
+        <span>Hand-coded · no frameworks · <kbd>Ctrl K</kbd> to navigate</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="Command palette">
+    <div class="palette-box">
+      <div class="palette-input"><span>❯</span><input type="text" id="palette-input" placeholder="Type a command or search…" aria-label="Search commands" autocomplete="off"><kbd>Esc</kbd></div>
+      <ul id="palette-list" role="listbox"></ul>
+      <div class="palette-foot"><span>↑↓ navigate</span><span>↵ select</span><span>esc close</span></div>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/assets/js/main.js" defer></script>
+</body>
+</html>

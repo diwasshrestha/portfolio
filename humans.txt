@@ -1,0 +1,10 @@
+/* TEAM */
+Developer: Diwas Shrestha
+Role: .NET Developer & Dynamics 365 Business Central Technical Consultant
+Site: https://www.diwasstha.com.np
+LinkedIn: https://www.linkedin.com/in/diwas-cresta/
+Location: Kathmandu, Nepal
+
+/* SITE */
+Standards: HTML5, CSS3, vanilla JavaScript
+Built: hand-coded, no frameworks

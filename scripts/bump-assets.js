@@ -6,7 +6,10 @@ const path = require('path');
 const crypto = require('crypto');
 
 const root = path.join(__dirname, '..');
-const assets = ['/assets/css/style.css', '/assets/js/main.js', '/assets/img/og-image.jpg'];
+const assets = [
+  '/assets/css/style.css', '/assets/js/main.js', '/assets/img/og-image.jpg',
+  '/favicon.ico', '/assets/img/favicon.svg', '/assets/img/favicon-32.png', '/assets/img/apple-touch-icon.png'
+];
 const hash = f => crypto.createHash('md5').update(fs.readFileSync(path.join(root, f))).digest('hex').slice(0, 8);
 const versions = Object.fromEntries(assets.map(a => [a, hash(a)]));
 

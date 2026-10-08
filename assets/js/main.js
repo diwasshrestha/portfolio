@@ -1,267 +1,100 @@
-/* diwasstha.com.np — interactions. No dependencies. */
+/* diwasstha.com.np. Small, dependency-free. */
 (() => {
   'use strict';
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const onHome = !!$('#hero-title');
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.body.classList.remove('no-js');
 
-  /* ---------- Year ---------- */
   $$('[data-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
 
-  /* ---------- Header state + scroll progress ---------- */
-  const header = $('.site-header');
-  const bar = $('.progress');
-  const onScroll = () => {
-    const y = window.scrollY;
-    header && header.classList.toggle('scrolled', y > 20);
-    if (bar) {
-      const h = document.documentElement.scrollHeight - innerHeight;
-      bar.style.transform = `scaleX(${h > 0 ? Math.min(y / h, 1) : 0})`;
-    }
-  };
+  /* top bar rule once you scroll */
+  const top = $('.top');
+  const onScroll = () => top && top.classList.toggle('scrolled', scrollY > 8);
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  /* ---------- Mobile menu ---------- */
-  const menuBtn = $('.menu-btn');
-  if (menuBtn) {
-    const setMenu = open => {
+  /* mobile menu */
+  const toggle = $('.menu-toggle');
+  if (toggle) {
+    const set = open => {
       document.body.classList.toggle('menu-open', open);
-      menuBtn.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.textContent = open ? 'Close ×' : 'Menu +';
     };
-    menuBtn.addEventListener('click', () => setMenu(!document.body.classList.contains('menu-open')));
-    $$('.nav-links a').forEach(a => a.addEventListener('click', () => setMenu(false)));
-    addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+    toggle.addEventListener('click', () => set(!document.body.classList.contains('menu-open')));
+    $$('.menu a').forEach(a => a.addEventListener('click', () => set(false)));
+    addEventListener('keydown', e => { if (e.key === 'Escape') set(false); });
   }
 
-  /* ---------- Active nav link ---------- */
-  const navLinks = $$('.nav-links a[href^="#"]');
-  if (navLinks.length && 'IntersectionObserver' in window) {
-    const map = new Map(navLinks.map(a => [a.getAttribute('href').slice(1), a]));
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(en => {
-        if (en.isIntersecting) {
-          navLinks.forEach(a => a.classList.remove('active'));
-          const a = map.get(en.target.id);
-          a && a.classList.add('active');
-        }
-      });
-    }, { rootMargin: '-45% 0px -50% 0px' });
-    map.forEach((_, id) => { const s = document.getElementById(id); s && io.observe(s); });
-  }
-
-  /* ---------- Reveal on scroll ---------- */
-  const reveals = $$('.reveal');
-  if ('IntersectionObserver' in window && !reduceMotion) {
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    reveals.forEach(el => io.observe(el));
-  } else {
-    reveals.forEach(el => el.classList.add('in'));
-  }
-
-  /* ---------- Card spotlight ---------- */
-  document.addEventListener('pointermove', e => {
-    const card = e.target.closest && e.target.closest('.card');
-    if (!card) return;
-    const r = card.getBoundingClientRect();
-    card.style.setProperty('--mx', `${e.clientX - r.left}px`);
-    card.style.setProperty('--my', `${e.clientY - r.top}px`);
-  }, { passive: true });
-
-  /* ---------- Typed rotator ---------- */
-  const typed = $('.typed[data-words]');
-  if (typed && !reduceMotion) {
-    const words = typed.dataset.words.split('|');
-    let wi = 0, ci = words[0].length, deleting = true;
-    const tick = () => {
-      const w = words[wi];
-      if (deleting) {
-        ci--;
-        if (ci <= 0) { deleting = false; wi = (wi + 1) % words.length; }
-      } else {
-        ci++;
-        if (ci >= words[wi].length) { deleting = true; typed.textContent = words[wi]; return setTimeout(tick, 2200); }
-      }
-      typed.textContent = (deleting ? w : words[wi]).slice(0, Math.max(ci, 0));
-      setTimeout(tick, deleting ? 28 : 55);
-    };
-    setTimeout(tick, 2600);
-  }
-
-  /* ---------- IDE tabs ---------- */
-  const ide = $('.ide');
-  if (ide) {
-    const tabs = $$('.ide-tab', ide);
-    const status = $('#ide-status-text');
-    let current = 0, auto = !reduceMotion, timer;
-    const animate = pre => {
-      $$('.l', pre).forEach((l, i) => { l.style.animationDelay = `${i * 70}ms`; });
-      ide.classList.remove('animating'); void ide.offsetWidth; ide.classList.add('animating');
-    };
-    const select = (i, focus) => {
-      current = i;
-      tabs.forEach((t, j) => {
-        const on = i === j;
-        t.setAttribute('aria-selected', String(on));
-        t.tabIndex = on ? 0 : -1;
-        const pane = document.getElementById(t.getAttribute('aria-controls'));
-        pane.hidden = !on;
-        if (on) { status && (status.textContent = pane.dataset.status || ''); if (!reduceMotion) animate(pane); }
-      });
-      focus && tabs[i].focus();
-    };
-    tabs.forEach((t, i) => {
-      t.addEventListener('click', () => { auto = false; clearInterval(timer); select(i); });
-      t.addEventListener('keydown', e => {
-        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-          auto = false; clearInterval(timer);
-          select((i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length, true);
-        }
-      });
-    });
-    if (reduceMotion) ide.classList.remove('animating'); else animate($('pre:not([hidden])', ide));
-    if (auto) timer = setInterval(() => { if (auto && !document.hidden) select((current + 1) % tabs.length); }, 8000);
-  }
-
-  /* ---------- Kathmandu clock ---------- */
-  const clock = $('#clock');
+  /* Kathmandu time + today's posting date */
+  const tz = 'Asia/Kathmandu';
+  const clock = $('[data-clock]');
   if (clock) {
-    const fmt = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kathmandu' });
-    const upd = () => { clock.textContent = fmt.format(new Date()); };
-    upd(); setInterval(upd, 15000);
+    const f = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: tz });
+    const tick = () => { clock.textContent = f.format(new Date()); };
+    tick(); setInterval(tick, 20000);
+  }
+  $$('[data-today]').forEach(el => {
+    const p = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: tz }).format(new Date());
+    el.textContent = p.replace(/\//g, '-');
+  });
+
+  /* fade things in as they arrive; draw the pen marks */
+  const marks = $$('.mark');
+  if ('IntersectionObserver' in window && !calm) {
+    const io = new IntersectionObserver(entries => entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      en.target.classList.add(en.target.classList.contains('mark') ? 'drawn' : 'in');
+      io.unobserve(en.target);
+    }), { threshold: 0.15, rootMargin: '0px 0px -30px 0px' });
+    $$('.reveal').forEach(el => io.observe(el));
+    marks.forEach(el => io.observe(el));
+  } else {
+    $$('.reveal').forEach(el => el.classList.add('in'));
+    marks.forEach(el => el.classList.add('drawn'));
   }
 
-  /* ---------- Particle network background ---------- */
-  const canvas = $('#net');
-  if (canvas && !reduceMotion && canvas.getContext) {
-    const ctx = canvas.getContext('2d');
-    let w, h, pts = [], raf, dpr = Math.min(devicePixelRatio || 1, 2);
-    const mouse = { x: -9999, y: -9999 };
-    const resize = () => {
-      w = canvas.clientWidth; h = canvas.clientHeight;
-      canvas.width = w * dpr; canvas.height = h * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const n = Math.round(Math.min(90, (w * h) / 18000));
-      pts = Array.from({ length: n }, () => ({
-        x: Math.random() * w, y: Math.random() * h,
-        vx: (Math.random() - .5) * .25, vy: (Math.random() - .5) * .25,
-        c: Math.random() < .5 ? '34,228,255' : '139,92,255'
-      }));
+  /* F9 posts the page. Business Central people will get it. */
+  const dlg = $('#post-dialog');
+  if (dlg && dlg.showModal) {
+    const msg = $('#post-msg'), sub = $('#post-sub'), btns = $('#post-btns'), bar = $('.bar', dlg);
+    let posted = false;
+    const reset = () => {
+      msg.textContent = 'Do you want to post this page?';
+      sub.textContent = 'Document No. DS-0001';
+      bar.hidden = true; bar.firstElementChild.style.width = '0';
+      btns.innerHTML = '<button class="primary" type="button" data-yes>Yes</button><button type="button" data-no>No</button>';
     };
-    const step = () => {
-      ctx.clearRect(0, 0, w, h);
-      for (let i = 0; i < pts.length; i++) {
-        const p = pts[i];
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0 || p.x > w) p.vx *= -1;
-        if (p.y < 0 || p.y > h) p.vy *= -1;
-        const dxm = p.x - mouse.x, dym = p.y - mouse.y, dm = dxm * dxm + dym * dym;
-        if (dm < 22000) { p.x += dxm * .004; p.y += dym * .004; }
-        for (let j = i + 1; j < pts.length; j++) {
-          const q = pts[j], dx = p.x - q.x, dy = p.y - q.y, d = dx * dx + dy * dy;
-          if (d < 16000) {
-            ctx.strokeStyle = `rgba(${p.c},${(1 - d / 16000) * .22})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
-          }
+    const open = () => { if (!dlg.open) { reset(); dlg.showModal(); $('[data-yes]', dlg).focus(); } };
+    dlg.addEventListener('click', e => {
+      if (e.target.matches('[data-no], [data-ok]')) dlg.close();
+      if (!e.target.matches('[data-yes]')) return;
+      btns.innerHTML = '';
+      msg.textContent = 'Posting lines…';
+      sub.textContent = 'Checking dimensions, VAT and good intentions.';
+      bar.hidden = false;
+      requestAnimationFrame(() => { bar.firstElementChild.style.width = '100%'; });
+      setTimeout(() => {
+        bar.hidden = true;
+        msg.textContent = posted ? 'Document DS-0001 has already been posted.' : 'The page was posted successfully.';
+        sub.textContent = posted ? 'Nice try. There is no undo in a ledger.' : 'Not really. But thanks for knowing the shortcut.';
+        btns.innerHTML = '<button class="primary" type="button" data-ok>OK</button>';
+        $('[data-ok]', dlg).focus();
+        const print = $('.print');
+        if (!posted && print) {
+          const s = document.createElement('span');
+          s.className = 'stamp posted'; s.setAttribute('aria-hidden', 'true'); s.textContent = 'Posted';
+          print.appendChild(s);
         }
-        ctx.fillStyle = `rgba(${p.c},.7)`;
-        ctx.beginPath(); ctx.arc(p.x, p.y, 1.4, 0, Math.PI * 2); ctx.fill();
-      }
-      raf = requestAnimationFrame(step);
-    };
-    resize();
-    addEventListener('resize', () => { cancelAnimationFrame(raf); resize(); step(); });
-    addEventListener('pointermove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
-    document.addEventListener('visibilitychange', () => { cancelAnimationFrame(raf); if (!document.hidden) step(); });
-    step();
+        posted = true;
+      }, calm ? 50 : 1300);
+    });
+    addEventListener('keydown', e => { if (e.key === 'F9') { e.preventDefault(); open(); } });
+    $$('[data-post]').forEach(b => b.addEventListener('click', open));
   }
 
-  /* ---------- Toast ---------- */
-  const toastEl = $('#toast');
-  let toastTimer;
-  const toast = msg => {
-    if (!toastEl) return;
-    toastEl.textContent = msg; toastEl.classList.add('show');
-    clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2200);
-  };
-  const copy = async (text, msg) => {
-    try { await navigator.clipboard.writeText(text); toast(msg || 'Copied ✓'); } catch { toast('Copy failed'); }
-  };
-
-  /* ---------- Command palette ---------- */
-  const palette = $('#palette');
-  if (palette) {
-    const input = $('#palette-input'), list = $('#palette-list');
-    const go = hash => () => {
-      if (onHome && document.getElementById(hash)) document.getElementById(hash).scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
-      else location.href = '/#' + hash;
-    };
-    const nav = url => () => { location.href = url; };
-    const ext = url => () => { window.open(url, '_blank', 'noopener'); };
-    const cmds = [
-      { t: 'Go to About', k: 'section', run: go('about') },
-      { t: 'Go to Services', k: 'section', run: go('services') },
-      { t: 'Go to Tech Stack', k: 'section', run: go('stack') },
-      { t: 'Go to Case Files', k: 'section', run: go('work') },
-      { t: 'Go to Testimonials', k: 'section', run: go('testimonials') },
-      { t: 'Go to FAQ', k: 'section', run: go('faq') },
-      { t: 'Contact / Hire Diwas', k: 'section', run: go('contact') },
-      { t: 'Blog — all articles', k: 'page', run: nav('/blog/') },
-      { t: 'Read: NAV to Business Central upgrade guide', k: 'article', run: nav('/blog/nav-to-business-central-upgrade-guide/') },
-      { t: 'Read: Business Central API from .NET', k: 'article', run: nav('/blog/business-central-api-dotnet-integration/') },
-      { t: 'Read: AL extension best practices', k: 'article', run: nav('/blog/al-extension-development-best-practices/') },
-      { t: 'Copy email address', k: 'action', run: () => copy('diwas668@gmail.com', 'Email copied ✓') },
-      { t: 'Open LinkedIn', k: 'link', run: ext('https://www.linkedin.com/in/diwas-cresta/') },
-      { t: 'Open GitHub', k: 'link', run: ext('https://github.com/diwasshrestha') },
-      { t: 'Home', k: 'page', run: nav('/') }
-    ];
-    let filtered = cmds, sel = 0, lastFocus;
-    const render = () => {
-      list.innerHTML = '';
-      filtered.forEach((c, i) => {
-        const li = document.createElement('li');
-        const b = document.createElement('button');
-        b.type = 'button'; b.setAttribute('role', 'option');
-        b.className = i === sel ? 'sel' : '';
-        b.setAttribute('aria-selected', String(i === sel));
-        b.innerHTML = `<span></span><small>${c.k}</small>`;
-        b.firstChild.textContent = c.t;
-        b.addEventListener('click', () => { close(); c.run(); });
-        b.addEventListener('mousemove', () => { if (sel !== i) { sel = i; render(); } });
-        li.appendChild(b); list.appendChild(li);
-      });
-      if (!filtered.length) list.innerHTML = '<li><button type="button" disabled><span>No results</span></button></li>';
-      const s = $('.sel', list); s && s.scrollIntoView({ block: 'nearest' });
-    };
-    const open = () => {
-      lastFocus = document.activeElement;
-      palette.classList.add('open'); input.value = ''; filtered = cmds; sel = 0; render();
-      input.focus();
-    };
-    const close = () => { palette.classList.remove('open'); lastFocus && lastFocus.focus && lastFocus.focus(); };
-    input.addEventListener('input', () => {
-      const q = input.value.toLowerCase().trim();
-      filtered = cmds.filter(c => (c.t + ' ' + c.k).toLowerCase().includes(q)); sel = 0; render();
-    });
-    input.addEventListener('keydown', e => {
-      if (e.key === 'ArrowDown') { e.preventDefault(); sel = Math.min(sel + 1, filtered.length - 1); render(); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); sel = Math.max(sel - 1, 0); render(); }
-      else if (e.key === 'Enter' && filtered[sel]) { const c = filtered[sel]; close(); c.run(); }
-    });
-    palette.addEventListener('click', e => { if (e.target === palette) close(); });
-    addEventListener('keydown', e => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); palette.classList.contains('open') ? close() : open(); }
-      else if (e.key === 'Escape' && palette.classList.contains('open')) close();
-    });
-    $$('[data-palette-open]').forEach(b => b.addEventListener('click', open));
-    if (/Mac|iPhone|iPad/.test(navigator.platform)) $$('kbd').forEach(k => { k.textContent = k.textContent.replace('Ctrl', '⌘'); });
-  }
-
-  /* ---------- Contact form (Web3Forms) ---------- */
+  /* quote form → Web3Forms */
   const form = $('#contact-form');
   if (form && window.fetch) {
     const st = $('#form-status');
@@ -269,7 +102,7 @@
       e.preventDefault();
       if (!form.checkValidity()) { form.reportValidity(); return; }
       const btn = form.querySelector('[type=submit]');
-      btn.disabled = true; st.className = 'form-status'; st.textContent = '> sending…';
+      btn.disabled = true; st.className = 'status'; st.textContent = 'Sending…';
       try {
         const res = await fetch(form.action, {
           method: 'POST',
@@ -277,14 +110,18 @@
           body: JSON.stringify(Object.fromEntries(new FormData(form)))
         });
         const json = await res.json();
-        if (res.ok && json.success) {
-          st.className = 'form-status ok'; st.textContent = '✓ message sent — I\'ll reply soon.'; form.reset();
-        } else throw new Error(json.message || 'Request failed');
-      } catch (err) {
-        st.className = 'form-status err'; st.textContent = '✗ could not send — please email diwas668@gmail.com';
+        if (!res.ok || !json.success) throw new Error(json.message || 'failed');
+        st.className = 'status ok'; st.textContent = 'Sent. I\'ll get back to you within a working day.'; form.reset();
+      } catch {
+        st.className = 'status err'; st.textContent = 'That didn\'t go through. Please email diwas668@gmail.com.';
       } finally { btn.disabled = false; }
     });
   }
+
+  const copy = async (text, btn) => {
+    try { await navigator.clipboard.writeText(text); btn.textContent = 'copied'; } catch { btn.textContent = 'press ctrl+c'; }
+    setTimeout(() => { btn.textContent = 'copy'; }, 1600);
+  };
 
   /* ---------- Blog: syntax highlighting + copy buttons ---------- */
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -329,7 +166,7 @@
     code.innerHTML = highlight(code.textContent, lang);
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'copy-btn'; b.textContent = 'copy';
-    b.addEventListener('click', () => copy(code.textContent, 'Code copied ✓'));
+    b.addEventListener('click', () => copy(code.textContent, b));
     pre.appendChild(b);
   });
 })();

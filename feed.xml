@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Diwas Shrestha — Business Central &amp; .NET Blog</title>
+    <title>Diwas Shrestha, writing on Business Central and .NET</title>
     <link>https://www.diwasstha.com.np/blog/</link>
     <atom:link href="https://www.diwasstha.com.np/feed.xml" rel="self" type="application/rss+xml"/>
-    <description>Practical guides on Dynamics 365 Business Central, AL development, NAV upgrades and .NET integration.</description>
+    <description>Notes on Dynamics 365 Business Central, AL development, NAV upgrades and .NET integration.</description>
     <language>en</language>
     <item>
-      <title>Upgrading Dynamics NAV to Business Central: A Technical Roadmap</title>
+      <title>Upgrading Dynamics NAV to Business Central: a technical roadmap</title>
       <link>https://www.diwasstha.com.np/blog/nav-to-business-central-upgrade-guide/</link>
       <guid isPermaLink="true">https://www.diwasstha.com.np/blog/nav-to-business-central-upgrade-guide/</guid>
       <pubDate>Wed, 07 Oct 2026 09:00:00 +0545</pubDate>
       <description>Step-by-step guide to upgrading Dynamics NAV to Business Central: upgrade paths, C/AL to AL conversion, upgrade codeunits, report migration and cut-over.</description>
     </item>
     <item>
-      <title>How to Call the Business Central API from .NET with OAuth 2.0</title>
+      <title>Calling the Business Central API from .NET with OAuth 2.0</title>
       <link>https://www.diwasstha.com.np/blog/business-central-api-dotnet-integration/</link>
       <guid isPermaLink="true">https://www.diwasstha.com.np/blog/business-central-api-dotnet-integration/</guid>
       <pubDate>Wed, 07 Oct 2026 09:00:00 +0545</pubDate>
       <description>Integrate Business Central with C# and ASP.NET Core: Entra ID app registration, OAuth 2.0 with MSAL, a typed HttpClient, OData paging and custom API pages.</description>
     </item>
     <item>
-      <title>AL Extension Development Best Practices for Business Central</title>
+      <title>AL extension habits worth keeping</title>
       <link>https://www.diwasstha.com.np/blog/al-extension-development-best-practices/</link>
       <guid isPermaLink="true">https://www.diwasstha.com.np/blog/al-extension-development-best-practices/</guid>
       <pubDate>Wed, 07 Oct 2026 09:00:00 +0545</pubDate>
